@@ -1,0 +1,30 @@
+pipeline {
+    agent { label "agent1" }
+    
+    stages {
+        stage("clone") {
+            steps {
+                git branch: "main" , url: "https://github.com/saurabheb/demo_django_app.git"
+            }
+        }
+        stage("build") {
+            steps {
+                script {
+                    sh "sudo docker build --no-cache -t todo-app ."
+                }
+            }
+        }
+        stage("testing") {
+            steps {
+                echo "testing the code"
+            }
+        }
+        stage(deployment) {
+            steps {
+                script {
+                    sh "sudo docker run -p 8001:8001 --name testing_automated_build -d todo-app"
+                }
+            }
+        }
+    }
+}
